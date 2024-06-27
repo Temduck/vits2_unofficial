@@ -32,7 +32,6 @@ def main():
     n_gpus = torch.cuda.device_count()
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "8000"
-    task = Task.init(project_name='tts', task_name='vits2')
 
     hps = get_hparams()
     mp.spawn(
@@ -51,6 +50,7 @@ def run(rank, n_gpus, hps):
         logger = task.get_logger(hps.model_dir)
         logger.info(hps)
         task.check_git_hash(hps.model_dir)
+        clearml_task = Task.init(project_name='tts', task_name='vits2')
         writer = SummaryWriter(log_dir=hps.model_dir)
         writer_eval = SummaryWriter(log_dir=os.path.join(hps.model_dir, "eval"))
 
@@ -178,19 +178,19 @@ def train_and_evaluate(rank, epoch, hps, nets, optims, schedulers, scaler, loade
                 losses_str = " ".join(f"{loss.item():.3f}" for loss in losses)
                 loader.set_postfix_str(f"{losses_str}, {global_step}, {lr:.9f}")
 
-                # scalar_dict = {"loss/g/total": loss_gen_all, "loss/d/total": loss_disc_all, "learning_rate": lr, "grad_norm_d": grad_norm_d, "grad_norm_g": grad_norm_g}
-                # scalar_dict.update({"loss/g/fm": loss_fm, "loss/g/mel": loss_mel, "loss/g/dur": loss_dur, "loss/g/kl": loss_kl_dur})
+                scalar_dict = {"loss/g/total": loss_gen_all, "loss/d/total": loss_disc_all, "learning_rate": lr, "grad_norm_d": grad_norm_d, "grad_norm_g": grad_norm_g}
+                scalar_dict.update({"loss/g/fm": loss_fm, "loss/g/mel": loss_mel, "loss/g/dur": loss_dur, "loss/g/kl": loss_kl_dur})
 
-                # scalar_dict.update({"loss/g/{}".format(i): v for i, v in enumerate(losses_gen)})
-                # scalar_dict.update({"loss/d_r/{}".format(i): v for i, v in enumerate(losses_disc_r)})
-                # scalar_dict.update({"loss/d_g/{}".format(i): v for i, v in enumerate(losses_disc_g)})
-                # image_dict = {
-                #     "slice/mel_org": task.plot_spectrogram_to_numpy(y_mel[0].data.cpu().numpy()),
-                #     "slice/mel_gen": task.plot_spectrogram_to_numpy(y_hat_mel[0].data.cpu().numpy()),
-                #     "all/mel": task.plot_spectrogram_to_numpy(mel[0].data.cpu().numpy()),
-                #     "all/attn": task.plot_alignment_to_numpy(attn[0, 0].data.cpu().numpy()),
-                # }
-                # task.summarize(writer=writer, global_step=global_step, images=image_dict, scalars=scalar_dict, sample_rate=hps.data.sample_rate)
+                scalar_dict.update({"loss/g/{}".format(i): v for i, v in enumerate(losses_gen)})
+                scalar_dict.update({"loss/d_r/{}".format(i): v for i, v in enumerate(losses_disc_r)})
+                scalar_dict.update({"loss/d_g/{}".format(i): v for i, v in enumerate(losses_disc_g)})
+                image_dict = {
+                    "slice/mel_org": task.plot_spectrogram_to_numpy(y_mel[0].data.cpu().numpy()),
+                    "slice/mel_gen": task.plot_spectrogram_to_numpy(y_hat_mel[0].data.cpu().numpy()),
+                    "all/mel": task.plot_spectrogram_to_numpy(mel[0].data.cpu().numpy()),
+                    "all/attn": task.plot_alignment_to_numpy(attn[0, 0].data.cpu().numpy()),
+                }
+                task.summarize(writer=writer, global_step=global_step, images=image_dict, scalars=scalar_dict, sample_rate=hps.data.sample_rate)
 
             # Save checkpoint on CPU to prevent GPU OOM
             if global_step % hps.train.eval_interval == 0:
