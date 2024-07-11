@@ -23,8 +23,8 @@ M2_speaker_defulats: &M2_speaker_defulats
   vocab_file: datasets/issai_base/vocabs/M2_vocab.txt
 
 train:
-  log_interval: 100
-  eval_interval: 1000
+  log_interval: 300
+  eval_interval: 2000
   seed: 1234
   epochs: 20000
   learning_rate: 2.0e-4
