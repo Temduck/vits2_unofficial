@@ -1,22 +1,26 @@
 issai_speakers_defults: &issai_speakers_defults
-  vocab_file: datasets/issai_base/vocab.txt
   language: kk
   sample_rate: 22050
 F1_speaker_defulats: &F1_speaker_defulats
   training_files: datasets/issai_base/filelists/F1_train.txt
   validation_files: datasets/issai_base/filelists/F1_val.txt
+  vocab_file: datasets/issai_base/vocabs/F1_vocab.txt
 F2_speaker_defulats: &F2_speaker_defulats
   training_files: datasets/issai_base/filelists/F2_train.txt
   validation_files: datasets/issai_base/filelists/F2_val.txt
+  vocab_file: datasets/issai_base/vocabs/F2_vocab.txt
 F3_speaker_defulats: &F3_speaker_defulats
   training_files: datasets/issai_base/filelists/F3_train.txt
   validation_files: datasets/issai_base/filelists/F3_val.txt
+  vocab_file: datasets/issai_base/vocabs/F3_vocab.txt
 M1_speaker_defulats: &M1_speaker_defulats
   training_files: datasets/issai_base/filelists/M1_train.txt
   validation_files: datasets/issai_base/filelists/M1_val.txt
+  vocab_file: datasets/issai_base/vocabs/M1_vocab.txt
 M2_speaker_defulats: &M2_speaker_defulats
   training_files: datasets/issai_base/filelists/M2_train.txt
   validation_files: datasets/issai_base/filelists/M2_val.txt
+  vocab_file: datasets/issai_base/vocabs/M2_vocab.txt
 
 train:
   log_interval: 100
@@ -38,7 +42,7 @@ train:
   c_kl_audio: 0.05 # 0.05 Allow more audio variation. default: 1
 
 data:
-  <<: *F2_speaker_defulats
+  <<: *F3_speaker_defulats
   <<: *issai_speakers_defults
   text_cleaners:
     - phonemize_text
