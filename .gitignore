@@ -14,3 +14,5 @@ monotonic_align/monotonic_align
 logs
 test
 datasets/madasr23_base/filelists
+
+metadata/
