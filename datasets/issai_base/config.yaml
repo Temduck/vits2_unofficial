@@ -1,6 +1,9 @@
 issai_speakers_defults: &issai_speakers_defults
   language: kk
   sample_rate: 22050
+issai_multispeaker_defaults: &issai_multispeaker_defaults
+  training_files: datasets/issai_base/filelists/issai_base_file_sid_tokens_train_filelist.txt
+  validation_files: datasets/issai_base/filelists/issai_base_file_sid_tokens_val_filelist.txt
 F1_speaker_defulats: &F1_speaker_defulats
   training_files: datasets/issai_base/filelists/issai_speakers/F1_train_filelist.txt
   validation_files: datasets/issai_base/filelists/issai_speakers/F1_val_filelist.txt
@@ -37,7 +40,7 @@ train:
   c_kl_audio: 0.05 # 0.05 Allow more audio variation. default: 1
 
 data:
-  <<: *F3_speaker_defulats
+  <<: *M2_speaker_defulats
   <<: *issai_speakers_defults
   vocab_file: datasets/issai_base/vocab.txt
   text_cleaners:
